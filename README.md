@@ -12,6 +12,7 @@ int tob;
 string method;
 time_t date;
 int cached;
+arangodb::velocypack:Builder body;
 };
 ```
 
