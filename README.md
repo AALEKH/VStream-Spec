@@ -1,4 +1,20 @@
 # VStream-Spec
+
+VSTREAM is supposed to be REST architecture based binary protocl which sends Velocypack Bytes to communicate.
+
+VStream structure will be as follow:
+
+```
+struct vstream{
+long long int id;
+long int sub_id;
+int tob;
+string method;
+time_t date;
+int cached;
+};
+```
+
 Specifications for VStream Protocol
 
       +---------+---------+--------------------+---------+------+--------+
@@ -24,25 +40,21 @@ order "sub-id" will be used, for ex: for request id : 85127, response (having 3 
 
 ## TOB (Type Of Byte)
 
-TOB or Type Of Byte will help us determine the whether the Byte sent is request or response, this Request-Response model is valid
-for both Byte sent from Server or Client.
+TOB or Type Of Byte will help us determine the whether the Byte sent is request or response, this Request-Response model is valid for both Byte sent from Server or Client. 1->request; 0->response.
 
 ## METHOD
 
 This Contains VStream Methods, defined methods include:
 
 #### 1) AUTH
-#### 2) STATUS
+#### 2) CRED
 #### 3) GET
 #### 4) POST
 #### 5) DELETE
 #### 6) HEAD
 #### 7) PATCH
 #### 8) REGISTER
-#### 9) CRED
-#### 10) ERROR
-
-### 1) AUTH
+#### 9) status
 
 This method is used for response of CRED ; 1 if the CRED seems to verify, 0 if not. Further, the VelcoyPack(body) will contain 0x00 value.
 
@@ -72,15 +84,23 @@ This Method functions as Update request for a particlar row, file (blob).
 
 This Method is used for registering event of some kind, for ex: retrieve a row at 3:00 PM ( sort fo CRON job task).
 
-### 8) ERROR
+### 8) STATUS
 
-If a request results in some error, this method will be returned by the bytes along error code and string explaining the error.
+Returns STATUS code and message for a given request,for ex: this method will be returned by the bytes along error code and string explaining the error.
 Its body is of "0X07" type VelocyPack byte.
+
+#### 9) POST
+
+Used to insert some form of VelocyPack bytes into arangodb.
+
+==
 
 ## ERROR CODES
 
 example error codes include: 200, 404 (for invalid request), 500 (resource not available)...much more on these to be decided as per implementation.
 
 
+## Cached
 
+This determines whether the request needs to be cached or not. 0-> yes; 1 -> no.
 
